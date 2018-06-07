@@ -1,5 +1,6 @@
 import bs4
 from bs4 import BeautifulSoup
+import re
 
 
 """
@@ -132,13 +133,110 @@ def trave_test():
         print(repr(element))
 
 
+def has_class_no_id(tag):
+    return tag.has_attr('class') and not tag.has_attr('id')
+
+
 def serach_test():
     """
     搜索文档树
     以find_all( name , attrs , recursive , text , **kwargs )为例
     """
-    
+    html = '''
+            <html><head><title>The Dormouse's story</title></head>
+            <body>
+            <p class="title"><b>The Dormouse's story</b></p>
+
+            <p class="story">Once upon a time there were three little sisters; and their names were
+            <a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>,
+            <a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and
+            <a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>;
+            and they lived at the bottom of a well.</p>
+            <p class="story">...</p>
+            '''
+    # 1、name参数，可以传递字符串、正则表达式、列表、True
+    soup = BeautifulSoup(html, 'lxml')
+    """
+    print(soup.find_all("b"))  # 传递字符串参数，查找文档中所有<b>标签,[<b>The Dormouse's story</b>]
+    for tag in soup.find_all(re.compile("^b")):
+        print(tag.name)  # 传递以b开头的正则表达式，结果为body b
+    print(soup.find_all(["a", "b"]))  # 传入列表参数，soup将与列表中任意匹配的元素返回，下面找出文档中所有<a>和<b>标签
+    for tag in soup.find_all(True):
+        print(tag.name)  # True匹配任何值，查找所有tag，但是不会返回字符串节点
+    # 同时可以传递方法，如果这个方法返回True表示当前元素匹配，并且被找到，如果不是则返回False
+    print(soup.find_all(has_class_no_id))  # has_class_no_id在上面定义，这个方法将返回所有<p>标签
+    # 2、keyword参数，不知道标签，而是知道标签中指定的属性。
+    print(soup.find_all(id='link2'))
+    # [<a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>],soup会搜索tag的每一个id属性
+    soup.find_all(href=re.compile("elsie"),id='link1')  # 可以同时过滤tag的多个属性，
+    """
+    # 用class过滤时，class是python的关键字，这时，加个下划线就可以了
+    print(soup.find_all("a", class_="sister"))
+    # 有些tag属性在搜素时不能使用，比如HTML5中的"data-*"属性
+    data_soup = BeautifulSoup('<div data-foo="value">foo!</div>')
+    # print(data_soup.find_all(data-foo="value")) 错误写法
+    print(data_soup.find_all(attrs={"data-foo":"value"}))  # 通过 find_all() 方法的 attrs 参数定义一个字典参数来搜索包含特殊属性的tag
+    # 3、text参数可以搜素文档中的字符串内容，与name参数的可选值一样，可以传递字符串、列表、正则表达式等等
+    print(soup.find_all(text="Elsie"))
+    # 4、limit参数，限制返回结果的数量
+    print(soup.find_all("a", limit=2))
+    # 5、recursive参数，当设置recursive=False时，返回tag的的直接子节点
+    test_html = """
+    <html>
+ <head>
+  <title>
+   The Dormouse's story
+  </title>
+ </head>
+    """
+    test_soup = BeautifulSoup(test_html, 'lxml')
+    print(test_soup.html.find_all("title",recursive=False))  # 结果为[]空，因为html的直接子节点为head
+
+
+"""
+其他一些类似的用法：
+find_parents()返回所有祖先节点，find_parent()返回直接父节点。
+find_next_siblings()返回后面所有兄弟节点，find_next_sibling()返回后面第一个兄弟节点。
+find_previous_siblings()返回前面所有兄弟节点，find_previous_sibling()返回前面第一个兄弟节点。
+find_all_next()返回节点后所有符合条件的节点, find_next()返回第一个符合条件的节点
+find_all_previous()返回节点后所有符合条件的节点, find_previous()返回第一个符合条件的节点
+"""
+
+
+def css_test():
+    """
+    CSS选择器，写CSS时，标签名不加任何修饰，类名前加.，id名前加#，可以采用类似的方法筛选元素，用到的方法是soup.select()返回list
+    """
+    html = '''
+    <div class="panel">
+        <div class="panel-heading">
+            <h4>Hello</h4>
+        </div>
+        <div class="panel-body">
+            <ul class="list" id="list-1">
+                <li class="element">Foo</li>
+                <li class="element">Bar</li>
+                <li class="element">Jay</li>
+            </ul>
+            <ul class="list-small" id="list-2">
+                <li class="element">Foo</li>
+                <li class="element">Bar</li>
+            </ul>
+        </div>
+    </div>
+    '''
+    soup = BeautifulSoup(html, 'lxml')
+    print(soup.select('div'))  # 通过标签名来查找
+    print(soup.select('.panel'))  # 通过类名来查找
+    print(soup.select('#list1'))  # 通过id来查找
+    print(soup.select('ul #list-2'))  # 组合查找，如查找ul标签中，id等于list-2的内容，两者通过空格隔开
+    # 属性查找，属性需要用中括号括起来，注意属性和标签属于同一节点，所以中间不能加空格，否则会无法匹配到。
+    print(soup.select('li[class="element"]'))
+    # 以上select方法返回的结果都是列表形式，可以遍历列表输出
+    for li in soup.select('li'):
+        print(li.get_text())  # get_text()函数获取内容，Foo Bar Jay
+        print(li['class'])  # 获取属性,element
 
 
 if __name__ == '__main__':
-    trave_test()
+    css_test()
