@@ -69,7 +69,20 @@ def get_cookies():
     print(response.cookies)
     for key, value in response.cookies.items():
         print(key + "=" + value)
-    # cookies的一个作用就是模拟登录，会话维持
+
+
+# cookies的一个作用就是模拟登录，会话维持
+"""
+cookies过一段时间会失效，此时，服务器无法识别我们的身份，如果我们请求一个需要登录才能查看的资源，会自动跳转到登录界面。
+解决方法是session，session会话对象让你能够跨请求保持某些参数。它也会在同一个Session实例发出的所有请求之间保持cookies。
+也就是session可以自动更新请求时的headers。
+但是注意一点：session确实会根据服务器响应的信息自动更新下次请求的headers，但是，它并不是简单的覆盖原来的headers，而是与程序中我们自己设置的原来的headers合并，
+而且，用户设置的优先度更高，也就是说，合并时，新的cookie被丢弃了，而我们设置的旧的cookie却保留下来了。所以程序中的cookie依旧会失效，因为cookie一直没有更新。
+具体参考：http://irootlee.com/python_cookie/
+"""
+
+
+def keep_connect():
     s = requests.Session()
     s.get("http://httpbin.org/cookies/set/number/123456")
     response1 = s.get("http://httpbin.org/cookies")
