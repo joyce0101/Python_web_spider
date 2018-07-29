@@ -9,13 +9,13 @@ selenium可以模拟真实浏览器，自动化测试工具，支持多种浏览
 上图显示基本上支持所有的浏览器   
 **这里要说一下比较重要的PhantomJS,PhantomJS是一个而基于WebKit的服务端JavaScript API,支持Web而不需要浏览器支持，其快速、原生支持各种Web标准：Dom处理，CSS选择器，JSON等等。PhantomJS可以用用于页面自动化、网络监测、网页截屏，以及无界面测试**
 ## 访问页面
-`
-def get_url():  
-    browser = webdriver.Chrome()  
-    browser.get("http://baidu.com")  
-    print(browser.page_source)  
-    browser.close()  
-`
+
+	def get_url():  
+    	browser = webdriver.Chrome()  
+    	browser.get("http://baidu.com")  
+    	print(browser.page_source)  
+    	browser.close()  
+
    
 运行上述代码后，脚本自动代开chrome浏览器，打开百度后，关闭浏览器  
 ## 查找元素
