@@ -11,11 +11,41 @@ selenium可以模拟真实浏览器，自动化测试工具，支持多种浏览
 ## 访问页面
 
 	def get_url():  
-    browser = webdriver.Chrome()  
-    browser.get("http://baidu.com")  
-    print(browser.page_source)  
-    browser.close()  
+    	browser = webdriver.Chrome()  
+    	browser.get("http://baidu.com")  
+    	print(browser.page_source)  
+    	browser.close()  
 
    
-运行上述代码后，脚本自动代开chrome浏览器，打开百度后，关闭浏览器  
+运行上述代码后，脚本自动代开chrome浏览器，打开百度后，关闭浏览器,并打印页面信息   
+*注意：运行时可能会抛出没有Chromedriver的异常，此时只要brew install chromedriver 即可* 
 ## 查找元素
+### 单个元素查找
+	def find_element():
+    	browser = webdriver.Chrome()
+    	browser.get("http://www.taobao.com")
+    	mes = browser.find_element_by_id("q")
+    	print(mes)
+    	browser.close()
+这里列举一下常用的查找元素方法：   
+
+find_element_by_name   
+find_element_by_id   
+find_element_by_xpath   
+find_element_by_link_text   
+find_element_by_partial_link_text   
+find_element_by_tag_name   
+find_element_by_class_name   
+find_element_by_css_selector   
+### 多个元素查找
+其实多个元素和单个元素的区别，举个例子：find_elements,单个元素是find_element,其他使用上没什么区别，通过其中的一个例子演示：   
+	def find_mul():
+    	browser = webdriver.Chrome()
+    	browser.get("http://www.taobao.com")
+    	list = browser.find_elements_by_css_selector('.service-bd li')
+    	print(list)
+    	browser.close()
+这样就获得一个列表。结果如下：  
+![查找多个元素](https://github.com/joyce0101/Python_web_spider/blob/master/pics/find_mul.png)
+
+
