@@ -11,10 +11,10 @@ selenium可以模拟真实浏览器，自动化测试工具，支持多种浏览
 ## 访问页面
 
 	def get_url():  
-    	browser = webdriver.Chrome()  
-    	browser.get("http://baidu.com")  
-    	print(browser.page_source)  
-    	browser.close()  
+    browser = webdriver.Chrome()  
+    browser.get("http://baidu.com")  
+    print(browser.page_source)  
+    browser.close()  
 
    
 运行上述代码后，脚本自动代开chrome浏览器，打开百度后，关闭浏览器  
