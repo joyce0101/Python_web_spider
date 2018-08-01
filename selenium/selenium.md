@@ -38,8 +38,9 @@ find_element_by_tag_name
 find_element_by_class_name   
 find_element_by_css_selector   
 ### 多个元素查找
-其实多个元素和单个元素的区别，举个例子：find_elements,单个元素是find_element,其他使用上没什么区别，通过其中的一个例子演示：   
-	def find_mul():
+其实多个元素和单个元素没什么区别，举个例子：find_elements,单个元素是find_element,其他使用上没什么区别，通过其中的一个例子演示: 
+
+    def find_mul():
     	browser = webdriver.Chrome()
     	browser.get("http://www.taobao.com")
     	list = browser.find_elements_by_css_selector('.service-bd li')
@@ -47,5 +48,5 @@ find_element_by_css_selector
     	browser.close()
 这样就获得一个列表。结果如下：  
 ![查找多个元素](https://github.com/joyce0101/Python_web_spider/blob/master/pics/find_mul.png)
-
+	
 
