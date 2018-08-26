@@ -48,5 +48,33 @@ find_element_by_css_selector
     	browser.close()
 这样就获得一个列表。结果如下：  
 ![查找多个元素](https://github.com/joyce0101/Python_web_spider/blob/master/pics/find_mul.png)
+### 元素交互操作
+代码见element_interaction()函数
+    browser = webdriver.Chrome()
+    browser.get("http://www.taobao.com")
+    input_str = browser.find_element_by_id('q')
+    input_str.send_keys("ipad")
+    time.sleep(1)
+    input_str.clear()
+    input_str.send_keys("MacBook pro")
+    button = browser.find_element_by_class_name("btn-search")
+    button.click()
+    time.sleep(10)
+运行结果可以看出会打开Chrome浏览器，打开淘宝，输入pro后，删除，输入macbook pro，然后点击搜索
+Selenium所有的api文档：http://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.common.action_chains
+### 交互动作
+代码见action_chains(）
+    browser = webdriver.Chrome()
+
+    url = "http://www.runoob.com/try/try.php?filename=jqueryui-api-droppable"
+    browser.get(url)
+    browser.switch_to.frame('iframeResult')
+    source = browser.find_element_by_css_selector('#draggable')
+    target = browser.find_element_by_css_selector('#droppable')
+    actions = ActionChains(browser)
+    actions.drag_and_drop(source）
+    actions.perform()
+更多操作参考：http://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.common.action_chains
+
 	
 
